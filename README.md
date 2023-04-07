@@ -1,4 +1,4 @@
-# how to
+# How to
 
 ```cpp
 source /opt/ros/~~~/setup.sh
