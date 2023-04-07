@@ -9,10 +9,10 @@ catkin_create_pkg my_pkg rospy
 rospy는 ROS에서 파이썬 코드를 실행할 수 있게 만들어주는 Python client library
 많은 ROS tool들은 rospy가 사용됨
 
-```cpp
+'''cpp
 cd my_pkg
 mkdir scripts
-```
+'''
 
 사용할 파이썬 코드를 scripts 디렉토리 안에 이동
 
