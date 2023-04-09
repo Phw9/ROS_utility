@@ -9,12 +9,12 @@ cd catkin_ws/src
 catkin_create_pkg my_pkg rospy
 ```
 
+사용할 파이썬 코드를 scripts 디렉토리 안에 이동
+
 ```cpp
 cd my_pkg
 mkdir scripts
 ```
-
-사용할 파이썬 코드를 scripts 디렉토리 안에 이동
 
 CMakelists.txt 수정
 
