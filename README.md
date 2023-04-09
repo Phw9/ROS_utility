@@ -1,13 +1,13 @@
 # How to
 
+rospy는 ROS에서 파이썬 코드를 실행할 수 있게 만들어주는 Python client library
+많은 ROS tool들은 rospy가 사용됨
+
 ```cpp
 source /opt/ros/~~~/setup.sh
 cd catkin_ws/src
 catkin_create_pkg my_pkg rospy
 ```
-
-rospy는 ROS에서 파이썬 코드를 실행할 수 있게 만들어주는 Python client library
-많은 ROS tool들은 rospy가 사용됨
 
 ```cpp
 cd my_pkg
