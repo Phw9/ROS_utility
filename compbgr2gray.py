@@ -1,44 +1,50 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*
+import sys, time
+# numpy and scipy
+import numpy as np
+from scipy.ndimage import filters
+
+# Ros libraries
+import roslib
+import rospy
+
+# Ros Messages
+from sensor_msgs.msg import CompressedImage
 import rosbag
 import cv2
-import numpy as np
 from cv_bridge import CvBridge
-from sensor_msgs.msg import CompressedImage, Image
+import glob
 
-bag = rosbag.Bag('/data/r3live/degenerate_seq_00.bag')
 
-output_bag = rosbag.Bag('degenerate_seq_00_gary.bag', 'w')
+# invert bag
+bag_rd = rosbag.Bag('/data/r3live/degenerate_seq_02.bag', "r")
+bag_data = bag_rd.read_messages()
+bag_wt = rosbag.Bag('/data/r3live/degenerate_seq_02_gray.bag', 'w')
+window_name = 'Image'
 
 bridge = CvBridge()
-def process_compressed_image(image_msg):
-    np_arr = np.fromstring(image_msg.data, np.uint8)
-    cv_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
-    gray_img = cv2.cvtColor(cv_img, cv2.COLOR_RGB2GRAY)
+for topic, msg, t in bag_data:
+    if topic == "/camera/image_color/compressed":
+        print('/camera/image_color/compressed.header.stamp: {}'.format(t))
+        np_arr = np.fromstring(msg.data, np.uint8)
+        image_color = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        image_gray = cv2.cvtColor(image_color, cv2.COLOR_BGR2GRAY)
+        gray_msg = bridge.cv2_to_imgmsg(image_gray, encoding="mono8")
+        gray_msg.header.stamp = t
 
-    gray_img_msg = bridge.cv2_to_imgmsg(gray_img, encoding="mono8")
-    gray_img_msg.header = image_msg.header
-    output_bag.write('/camera/image_gray', gray_img_msg, t=image_msg.header.stamp)
+        bag_wt.write('/camera/image_color', gray_msg, t)
 
-def process_image(image_msg):
-    cv_img = bridge.imgmsg_to_cv2(image_msg, desired_encoding="passthrough")
+    elif topic == "/livox/imu":
+        print('/livox/imu.header.stamp: {}'.format(t))
+        imu_msg = msg
+        bag_wt.write('/livox/imu', imu_msg, t)
 
-    gray_img = cv2.cvtColor(cv_img, cv2.COLOR_RGB2GRAY)
+    elif topic == "/livox/lidar":
+        print('/livox/lidar.header.stamp: {}'.format(t))
+        lidar_msg = msg
+        bag_wt.write('/livox/lidar', lidar_msg, t)
 
-    gray_img_msg = bridge.cv2_to_imgmsg(gray_img, encoding="mono8")
-    gray_img_msg.header = image_msg.header
-    output_bag.write('/camera/image_gray', gray_img_msg, t=image_msg.header.stamp)
 
-for topic, msg, t in bag.read_messages():
-    if topic == '/camera/image_color/compressed':
-        process_compressed_image(msg)
-    if topic == '/camera/image_color':
-        process_image(msg)
-    if topic == '/livox/imu':
-        output_bag.write(topic, msg, t=msg.header.stamp)
-    if topic == '/livox/lidar':
-        output_bag.write(topic, msg, t=msg.header.stamp)
-    if topic == '/livox_pcl0':
-        output_bag.write(topic, msg, t=msg.header.stamp)
-
-bag.close()
-output_bag.close()
+bag_wt.close()
