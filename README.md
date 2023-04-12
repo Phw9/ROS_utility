@@ -14,6 +14,8 @@ catkin_create_pkg my_pkg rospy
 ```cpp
 cd my_pkg
 mkdir scripts
+cd scripts
+git clone this reop
 ```
 
 CMakelists.txt 수정
