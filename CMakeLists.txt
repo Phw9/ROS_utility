@@ -171,6 +171,7 @@ catkin_install_python(PROGRAMS
   scripts/bgr2gray.py
   scripts/compbgr2gray.py
   scripts/extract_image.py
+  scripts/calibration.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
