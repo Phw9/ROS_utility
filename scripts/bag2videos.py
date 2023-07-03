@@ -5,7 +5,7 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import CompressedImage
 import rosbag
 
-def convert_rosbag_to_video(rosbag_path, video_path):
+def convert_rosbag_to_video(rosbag_path, video_path, topic):
     bridge = CvBridge()
 
     # Open the bag file
@@ -53,4 +53,4 @@ if __name__ == "__main__":
     topic = "/cam0/compressed"
 
     # Convert the rosbag to video
-    convert_rosbag_to_video(rosbag_path, video_path)
+    convert_rosbag_to_video(rosbag_path, video_path, topic)
