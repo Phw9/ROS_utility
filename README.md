@@ -1,6 +1,6 @@
 # Simple to use ROS python library
 
-### How to
+## How to
 ```
 bag2videos.py 
 
